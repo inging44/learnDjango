@@ -6,8 +6,12 @@
 </head>
     <body>
     	<h1>登录</h1>
-    	<form>
-    		<input type="username"/>
+    	<form action="/login_action/" method="post">
+    		<input name="username" type="text"/><br/>
+			<input type="password" name="password"/> <br/>
+			{{error}}<br/>
+			<button id="button" type="submit">登录</button>
+			{% csrf_token %}
     	</form>
     </body>
 </html>
