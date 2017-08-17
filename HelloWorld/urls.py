@@ -16,10 +16,21 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from sign.controllers import views
+from django.conf import settings
+from django.conf.urls.static import static
 
+# app_name = ['sign']
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^index/', views.index),
     url(r'^login_action/', views.login_action),
     url(r'^event_manage/', views.event_manage),
 ]
+
+# if settings.DEBUG is False:
+#     urlpatterns += (
+#         url(r'^static/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.STATIC_ROOT,
+#         }),
+#    )
+
+
