@@ -1,0 +1,3 @@
+1、debug为false时静态文件的访问问题还未解决，按照网上的处理方式，patterns报错（NameError）
+2、创建static文件之后需要执行collectstatic将admin的静态文件复制过去
+3、巴拉巴拉睡觉去了
