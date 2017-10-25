@@ -1,3 +1,4 @@
+#coding=utf-8
 """
 Django settings for HelloWorld project.
 
@@ -25,7 +26,7 @@ SECRET_KEY = '%ug$@)+*#vfahi@4u737w#0omqyf$r-^%)d=oq@0#fan_jjc3)'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [ ]
+ALLOWED_HOSTS = [u'120.78.168.137']
 
 
 # Application definition
@@ -39,8 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'sign',
 ]
-
-MIDDLEWARE = [
+#MIDDLEWARE Django1.9之后
+MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
