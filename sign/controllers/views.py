@@ -10,7 +10,5 @@ def index(request):
 	return render(request,"index.html")
 def my(request):
         lists = {"a":1,"b":2}
-        ##return render(request,"result.html",{'r':lists})
-        
         return HttpResponse(json.dumps(lists), content_type="application/json")
 
