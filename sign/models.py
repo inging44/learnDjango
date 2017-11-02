@@ -1,5 +1,4 @@
 from django.db import models
-from mongoengine import Document  
    
 class News(models.Model):
     created = models.DateTimeField(auto_now_add=True)
