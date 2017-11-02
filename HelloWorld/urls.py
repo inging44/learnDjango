@@ -15,10 +15,10 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from sign.controllers.views import NewsViewSet, NewsDetailViewSet
 from sign.controllers import views
 from django.contrib.auth.models import User
 from rest_framework import routers, serializers, viewsets
-
 
 # Serializers define the API representation.
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -34,6 +34,8 @@ class UserViewSet(viewsets.ModelViewSet):
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
+router.register(r'newsDetail', NewsViewSet)
+router.register(r'news', NewsDetailViewSet)
 
 
 urlpatterns = [
@@ -41,5 +43,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^index/', views.index),
     url(r'^my/', views.my),
+    # url(r'^news/(?P<news_id>[0-9]+)/$', views.news_detail),
+    # url(r'^news/latest$', views.latest_news),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
