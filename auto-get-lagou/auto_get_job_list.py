@@ -23,7 +23,7 @@ headers = {'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
 
 url = 'https://www.lagou.com/jobs/positionAjax.json?px=new'
 city = u'成都'
-kd = u'测试'
+kd = u'测试工程师'
 
 
 
@@ -39,7 +39,7 @@ def getInfo(url, para):
 	pageCount = getPageCount(json)
 	html = '<html><body><table><tr><th>公司名</th><th>职位</th><th>公司规模</th><th>年限</th><th>地区</th><th>薪资</th><th>发布时间</th></tr>'
 	jobList = []
-	for i in range(1, 5):
+	for i in range(1, pageCount+1):
 		print('第%s页' % i)
 		para['pn'] = str(i)
 		htmlCode = generalHttp.post(url, para=para, headers=headers)
@@ -119,12 +119,13 @@ def sendMail(text):
 	msg['To'] = ';'.join(receiver)
 	msg['Cc'] = ';'.join(mailToCc)
 	try:
-		smtp = smtplib.SMTP(smtpserver)
+		smtp = smtplib.SMTP_SSL(smtpserver,'465')
+		#smtp = smtplib.SMTP(smtpserver)
 		# smtp.docmd("EHLO server")
 		# smtp.starttls()
 		# smtp.EnableSsl = True
 		# smtp.set_debuglevel(1)
-		# smtp.connect(smtpserver)
+		#smtp.connect(smtpserver,'465')
 		# smtp.docmd("AUTH LOGIN")
 		smtp.login(username, password)
 		smtp.sendmail(sender, receiver + mailToCc, msg.as_string())
@@ -141,10 +142,8 @@ def sendMail(text):
 if __name__ == '__main__':
 	#logging.error('Main start')
 	print('---begin---')
-	para = {'first': 'true', 'pn': '1', 'kd': kd, 'city': city}
+	para = {'first': 'true', 'pn': '1', 'kd': kd, 'city': city,'gj':'3年及以下'}
 	html = getInfo(url, para) 	# 获取原始接口返回值,拼接成邮箱需要的表格html字符串
 	flag = sendMail(html)	#发送至邮箱
 	if flag : print('%s爬取成功' % city)
 	else : print('%s爬取失败' % city)
-
-
