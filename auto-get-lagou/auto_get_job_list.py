@@ -6,6 +6,8 @@ import time
 import smtplib
 from email.mime.text import MIMEText
 import demjson
+import requests
+import bs4
 
 #定义header
 headers = {'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
@@ -23,7 +25,7 @@ headers = {'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
 
 url = 'https://www.lagou.com/jobs/positionAjax.json?px=new'
 city = u'成都'
-kd = u'测试工程师'
+kd = u'测试'
 
 
 
@@ -37,9 +39,9 @@ def getInfo(url, para):
 	# logging.error('htmlCode:')
 	# logging.error(htmlCode)
 	pageCount = getPageCount(json)
-	html = '<html><body><table><tr><th>公司名</th><th>职位</th><th>公司规模</th><th>年限</th><th>地区</th><th>薪资</th><th>发布时间</th></tr>'
+	html = '<html><style>.a{display:none}:target{display: table-row;border: 2px solid #D4D4D4;background-color: #e5eecc;}</style><body><table><tr><th>公司名</th><th>职位</th><th>公司规模</th><th>年限</th><th>地区</th><th>薪资</th><th>发布时间</th></tr>'
 	jobList = []
-	for i in range(1, pageCount+1):
+	for i in range(1,pageCount+1 ):
 		print('第%s页' % i)
 		para['pn'] = str(i)
 		htmlCode = generalHttp.post(url, para=para, headers=headers)
@@ -56,6 +58,7 @@ def getInfo(url, para):
         :return: 页面数量
 '''
 def getPageCount(json):
+	# print(json)
 	totalCount = json['content']['positionResult']['totalCount']      #职位总数量
 	resultSize = json['content']['positionResult']['resultSize']      #每一页显示的数量
 	pageCount = int(totalCount) // int(resultSize) + 1          #页面数量
@@ -79,13 +82,14 @@ def getAll(htmlCode):
 		jobList.append(dict)
 	return jobList
 #去重
+
 def filt(list1):
 	jobList = []
 	jobList.append(list1[0])
 	for i in list1:
-		k=0
+		k = 0
 		for j in jobList:
-			if i['positionId'] !=j['positionId']:k +=1
+			if i['positionId'] != j['positionId'] : k +=1
 			else:break
 			if k==len(jobList):jobList.append(i)
 	return jobList
@@ -96,18 +100,27 @@ def parseInfo(jobList):
 	#拼接成html
 	h = ''
 	for p in jobList:
-		h += '<tr><td><a title="'+str(p['companyFullName'])+'">'+str(p['companyFullName'])+\
+		desc = getPositionDesc(p['positionId'])
+		h += '<tr><td><a href="#'+str(p['positionId'])+'">'+str(p['companyFullName'])+\
 		'</a></td><td>'+str(p['positionName'])+'</td><td>'+str(p['companySize'])+'</td><td>'+\
             	str(p['workYear'])+'</td><td>'+str(p['district'])+'</td><td>'+str(p['salary'])+\
-		'</td><td>'+str(p['createTime'])+'</td></tr>'
+		'</td><td>'+str(p['createTime'])+'</td></tr><tr class="a" id="'+str(p['positionId'])+'"><td colspan=7>'+str(desc.decode('utf-8')).replace('\n','<br />')+'</td></tr>'
+		
 	return h
+#获取职位详情
+def getPositionDesc(posId):
+	# print(posId)
+	response = requests.get('https://m.lagou.com/jobs/'+str(posId)+'.html',headers=headers)
+	content = bs4.BeautifulSoup(response.content, "lxml")
+	return content.find('dd', class_="job_bt").find('div').get_text().encode('utf-8')
+
+
 
 # 发送通知邮件
 def sendMail(text):
-	print("html:")
-	print(text)
+	# print("html:")
 	sender = '13990122270@163.com'
-	receiver = ['738631563@qq.com']
+	receiver = ['1178942196@qq.com']
 	mailToCc = ['ltinghuang@163.com'] #抄送
 	subject = '职位通知'
 	smtpserver = 'smtp.163.com'
@@ -119,7 +132,7 @@ def sendMail(text):
 	msg['To'] = ';'.join(receiver)
 	msg['Cc'] = ';'.join(mailToCc)
 	try:
-		smtp = smtplib.SMTP_SSL(smtpserver,'465')
+		smtp = smtplib.SMTP(smtpserver)
 		#smtp = smtplib.SMTP(smtpserver)
 		# smtp.docmd("EHLO server")
 		# smtp.starttls()
