@@ -120,7 +120,7 @@ def getPositionDesc(posId):
 def sendMail(text):
 	# print("html:")
 	sender = '13990122270@163.com'
-	receiver = ['1178942196@qq.com']
+	receiver = ['73863153@qq.com']
 	mailToCc = ['ltinghuang@163.com'] #抄送
 	subject = '职位通知'
 	smtpserver = 'smtp.163.com'
