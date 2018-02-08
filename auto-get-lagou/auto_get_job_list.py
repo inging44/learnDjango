@@ -100,11 +100,13 @@ def parseInfo(jobList):
 	#拼接成html
 	h = ''
 	for p in jobList:
-		desc = getPositionDesc(p['positionId'])
+		desc = str(getPositionDesc(p['positionId']).decode('utf-8')).replace('\n\n','\n').replace('\n','<br />')
+		detail = str(p['companyFullName'])+'——'+str(p['positionName'])+'——'+str(p['district'])+'——'+str(p['companySize'])+'——'+str(p['workYear'])+'——'+str(p['createTime'])+'<br />'
 		h += '<tr><td><a href="#'+str(p['positionId'])+'">'+str(p['companyFullName'])+\
 		'</a></td><td>'+str(p['positionName'])+'</td><td>'+str(p['companySize'])+'</td><td>'+\
             	str(p['workYear'])+'</td><td>'+str(p['district'])+'</td><td>'+str(p['salary'])+\
-		'</td><td>'+str(p['createTime'])+'</td></tr><tr class="a" id="'+str(p['positionId'])+'"><td colspan=7>'+str(desc.decode('utf-8')).replace('\n','<br />')+'</td></tr>'
+		'</td><td>'+str(p['createTime'])+'</td></tr><tr class="a" id="'+str(p['positionId'])+、
+		'"><td colspan=7>'+detail+'</td></tr>'
 		
 	return h
 #获取职位详情
@@ -120,7 +122,7 @@ def getPositionDesc(posId):
 def sendMail(text):
 	# print("html:")
 	sender = '13990122270@163.com'
-	receiver = ['73863153@qq.com']
+	receiver = ['738631563@qq.com']
 	mailToCc = ['ltinghuang@163.com'] #抄送
 	subject = '职位通知'
 	smtpserver = 'smtp.163.com'
